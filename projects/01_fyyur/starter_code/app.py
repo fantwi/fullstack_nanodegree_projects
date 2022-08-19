@@ -353,9 +353,9 @@ def create_venue_submission():
   finally:
     db.session.close()
     if error:
-      flash('Venue ' + request.form['name'] + ' was successfully listed!')
-    else:
       flash('An error occurred. Venue ' + request.form['name'] + ' could not be listed')
+    else:
+      flash('Venue ' + request.form['name'] + ' was successfully listed!')
   return render_template('pages/home.html')
 
 @app.route('/venues/<venue_id>', methods=['DELETE'])
@@ -560,6 +560,41 @@ def edit_artist(artist_id):
 
 @app.route('/artists/<int:artist_id>/edit', methods=['POST'])
 def edit_artist_submission(artist_id):
+  error = False
+  try:
+    artist = Artist.query.get(artist_id)
+    artist.name = request.form['name'].value
+    artist.city = request.form['city'].value
+    artist.state = request.form['state'].value
+    artist.address = request.form['address'].value
+    artist.phone = request.form['phone'].value
+    genre_data = request.form['genre'].value
+    artist.genres = ', '.join(genre_data)
+    artist.facebook_link = request.form['facebook_link'].value
+    artist.image_link = request.form['image_link'].value
+    artist.website_link = request.form['website_link'].value
+    artist.seeking_talent = request.form['seeking_talent'].value
+    artist.seeking_description = request.form['seeking_description'].value
+
+    #venue = Venue(name=name, city=city, state=state, address=address, phone=phone, genres=genres, facebook_link=facebook_link, image_link=image_link, website_link=website_link, seeking_talent=seeking_talent, seeking_description=seeking_description)
+    db.session.add(artist)
+    db.session.commit()
+
+    # TODO: modify data to be the data object returned from db insertion
+    # on successful db insert, flash success
+  except:
+    error = True
+    db.session.rollback()
+    print(sys.exc_info())
+    # TODO: on unsuccessful db insert, flash an error instead.
+    # e.g., flash('An error occurred. Venue ' + data.name + ' could not be listed.')
+    # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
+  finally:
+    db.session.close()
+    if error:
+      flash('An error occurred. Artist ' + request.form['name'] + ' could not be listed')
+    else:
+      flash('Artist ' + request.form['name'] + ' was successfully listed!')
   # TODO: take values from the form submitted, and update existing
   # artist record with ID <artist_id> using the new attributes
 
