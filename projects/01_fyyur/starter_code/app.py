@@ -185,8 +185,13 @@ def search_venues():
     Venue.name.ilike(f"%{search_term}%") | Venue.city.ilike(f"%{search_term}%") | Venue.state.ilike(f"%{search_term}%")
   ).all())
 
+  # response = {
+  #   "count": len(venues),
+  #   "data": []
+  # }
+
   response['count'] = len(venues)
-  response['values'] = []
+  response['data'] = []
 
   for v in venues:
     venue = {
@@ -195,7 +200,7 @@ def search_venues():
       "num_upcoming_shows": len(list(filter(lambda d: d.start_time > datetime.now(), v.shows)))
     }
 
-    response['values'].append(venue)
+    response['data'].append(venue)
 
 
   # response={
@@ -210,6 +215,20 @@ def search_venues():
 
 @app.route('/venues/<int:venue_id>')
 def show_venue(venue_id):
+  venue = Venue.query.get(venue_id)
+
+  past_shows = list(filter(lambda d: d.start_time < datetime.now(), venue.shows))
+  upcoming_shows = list(filter(lambda d: d.start_time >= datetime.now(), venue.shows))
+
+  past_shows = list(map(lambda d: d.show_artist(), past_shows))
+  upcoming_shows = list(map(lambda d: d.show_artist(), upcoming_shows))
+
+  data = venue.to_dict()
+  data['past_shows'] = past_shows
+  data['upcoming_shows'] = upcoming_shows
+  data['past_shows_count'] = len(past_shows)
+  data['upcoming_shows_count'] = len(upcoming_shows)
+
   # shows the venue page with the given venue_id
   # TODO: replace with real venue data from the venues table, using venue_id
   # data1={
@@ -289,7 +308,7 @@ def show_venue(venue_id):
   #   "past_shows_count": 1,
   #   "upcoming_shows_count": 1,
   # }
-  data = list(filter(lambda d: d['id'] == venue_id, [data1, data2, data3]))[0]
+  #data = list(filter(lambda d: d['id'] == venue_id, [data1, data2, data3]))[0]
   return render_template('pages/show_venue.html', venue=data)
 
 #  Create Venue
