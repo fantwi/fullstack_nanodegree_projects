@@ -338,18 +338,30 @@ def edit_artist_submission(artist_id):
   artist = Artist.query.get(artist_id)
   error = False
   try:
-    artist.name = request.form['name']
-    artist.city = request.form['city']
-    artist.state = request.form['state']
-    artist.phone = request.form['phone']
-    genre_data = request.form.getlist('genres')
+    # artist.name = request.form['name']
+    # artist.city = request.form['city']
+    # artist.state = request.form['state']
+    # artist.phone = request.form['phone']
+    # genre_data = request.form.getlist('genres')
+    # artist.genres = ', '.join(genre_data)
+    # #artist.genres = request.form.getlist('genres')
+    # artist.facebook_link = request.form['facebook_link']
+    # artist.image_link = request.form['image_link']
+    # artist.website_link = request.form['website_link']
+    # artist.seeking_talent = request.form['seeking_talent']
+    # artist.seeking_description = request.form['seeking_description']
+
+    artist.name = request.form.get('name', False)
+    artist.city = request.form.get('city', False)
+    artist.state = request.form.get('state', False)
+    artist.phone = request.form.get('phone', False)
+    genre_data = request.form.getlist('genres', False)
     artist.genres = ', '.join(genre_data)
-    #artist.genres = request.form.getlist('genres')
-    artist.facebook_link = request.form['facebook_link']
-    artist.image_link = request.form['image_link']
-    artist.website_link = request.form['website_link']
-    artist.seeking_talent = request.form['seeking_talent']
-    artist.seeking_description = request.form['seeking_description']
+    artist.facebook_link = request.form.get('facebook_link', False)
+    artist.image_link = request.form.get('image_link', False)
+    artist.website_link = request.form.get('website_link', False)
+    artist.seeking_venue = request.form.get('seeking_venue')
+    artist.seeking_description = request.form.get('seeking_description', False)
 
     db.session.add(artist)
     db.session.commit()
@@ -400,18 +412,31 @@ def edit_venue_submission(venue_id):
   venue = Venue.query.get(venue_id)
   error = False
   try:
-    venue.name = request.form['name']
-    venue.city = request.form['city']
-    venue.state = request.form['state']
-    venue.address = request.form['address']
-    venue.phone = request.form['phone']
-    genre_data = request.form.getlist('genres')
+    # venue.name = request.form['name']
+    # venue.city = request.form['city']
+    # venue.state = request.form['state']
+    # venue.address = request.form['address']
+    # venue.phone = request.form['phone']
+    # genre_data = request.form.getlist('genres')
+    # venue.genres = ', '.join(genre_data)
+    # venue.facebook_link = request.form['facebook_link']
+    # venue.image_link = request.form['image_link']
+    # venue.website_link = request.form['website_link']
+    # venue.seeking_talent = request.form['seeking_talent']
+    # venue.seeking_description = request.form['seeking_description']
+
+    venue.name = request.form.get('name', False)
+    venue.city = request.form.get('city', False)
+    venue.state = request.form.get('state', False)
+    venue.address = request.form.get('address', False)
+    venue.phone = request.form.get('phone', False)
+    genre_data = request.form.getlist('genres', False)
     venue.genres = ', '.join(genre_data)
-    venue.facebook_link = request.form['facebook_link']
-    venue.image_link = request.form['image_link']
-    venue.website_link = request.form['website_link']
-    venue.seeking_talent = request.form['seeking_talent']
-    venue.seeking_description = request.form['seeking_description']
+    venue.facebook_link = request.form.get('facebook_link', False)
+    venue.image_link = request.form.get('image_link', False)
+    venue.website_link = request.form.get('website_link', False)
+    venue.seeking_talent = request.form.get('seeking_talent')
+    venue.seeking_description = request.form.get('seeking_description', False)
 
     db.session.add(venue)
     db.session.commit()
