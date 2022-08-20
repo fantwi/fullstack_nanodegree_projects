@@ -2,10 +2,29 @@
 # Imports
 #----------------------------------------------------------------------------#
 
-from app import app as app
+#from app import app as app
+from flask import Flask
+from flask_migrate import Migrate
+from flask_moment import Moment
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy(app)
+#----------------------------------------------------------------------------#
+# App Config.
+#----------------------------------------------------------------------------#
+
+app = Flask(__name__)
+moment = Moment(app)
+app.config.from_object('config')
+#app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:cr122@localhost:5432/fyyurdb'
+#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+#db.init_app(app)
+db = SQLAlchemy()
+migrate = Migrate(app, db)
+
+# TODO: connect to a local postgresql database
+
 
 #----------------------------------------------------------------------------#
 # Models.
