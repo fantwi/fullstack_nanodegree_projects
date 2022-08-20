@@ -20,7 +20,7 @@ app.config.from_object('config')
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:cr122@localhost:5432/fyyurdb'
 #app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 #db.init_app(app)
-db = SQLAlchemy()
+db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 # TODO: connect to a local postgresql database
@@ -43,7 +43,7 @@ class Venue(db.Model):
     image_link = db.Column(db.String(500))
     facebook_link = db.Column(db.String(120))
     website_link = db.Column(db.String(500))
-    seeking_talent = db.Column(db.Boolean())
+    seeking_talent = db.Column(db.String())
     seeking_description = db.Column(db.String())
     shows = db.relationship("Show", backref="venues", lazy=False)
     
