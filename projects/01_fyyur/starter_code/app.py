@@ -342,9 +342,9 @@ def edit_artist_submission(artist_id):
     artist.city = request.form['city']
     artist.state = request.form['state']
     artist.phone = request.form['phone']
-    # genre_data = request.form.getlist('genres')
-    #artist.genres = ', '.join(genre_data)
-    artist.genres = request.form.getlist('genres')
+    genre_data = request.form.getlist('genres')
+    artist.genres = ', '.join(genre_data)
+    #artist.genres = request.form.getlist('genres')
     artist.facebook_link = request.form['facebook_link']
     artist.image_link = request.form['image_link']
     artist.website_link = request.form['website_link']
@@ -461,19 +461,6 @@ def create_artist_submission():
     seeking_venue = request.form.get('seeking_venue')
     seeking_description = request.form.get('seeking_description')
 
-    # artist.name = request.form['name']
-    # artist.city = request.form['city']
-    # artist.state = request.form['state']
-    # #artist.address = request.form['address']
-    # artist.phone = request.form['phone']
-    # genre_data = request.form.getlist['genres']
-    # artist.genres = ', '.join[genre_data]
-    # artist.facebook_link = request.form['facebook_link']
-    # artist.image_link = request.form['image_link']
-    # artist.website_link = request.form['website_link']
-    # artist.seeking_venue = request.form['seeking_venue']
-    # artist.seeking_description = request.form['seeking_description']
-
     artist = Artist(name=name, city=city, state=state, phone=phone, genres=genres, facebook_link=facebook_link, image_link=image_link, website_link=website_link, seeking_venue=seeking_venue, seeking_description=seeking_description)
     db.session.add(artist)
     db.session.commit()
@@ -512,42 +499,6 @@ def shows():
     })
   # displays list of shows at /shows
   # TODO: replace with real venues data.
-  # data=[{
-  #   "venue_id": 1,
-  #   "venue_name": "The Musical Hop",
-  #   "artist_id": 4,
-  #   "artist_name": "Guns N Petals",
-  #   "artist_image_link": "https://images.unsplash.com/photo-1549213783-8284d0336c4f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80",
-  #   "start_time": "2019-05-21T21:30:00.000Z"
-  # }, {
-  #   "venue_id": 3,
-  #   "venue_name": "Park Square Live Music & Coffee",
-  #   "artist_id": 5,
-  #   "artist_name": "Matt Quevedo",
-  #   "artist_image_link": "https://images.unsplash.com/photo-1495223153807-b916f75de8c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80",
-  #   "start_time": "2019-06-15T23:00:00.000Z"
-  # }, {
-  #   "venue_id": 3,
-  #   "venue_name": "Park Square Live Music & Coffee",
-  #   "artist_id": 6,
-  #   "artist_name": "The Wild Sax Band",
-  #   "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
-  #   "start_time": "2035-04-01T20:00:00.000Z"
-  # }, {
-  #   "venue_id": 3,
-  #   "venue_name": "Park Square Live Music & Coffee",
-  #   "artist_id": 6,
-  #   "artist_name": "The Wild Sax Band",
-  #   "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
-  #   "start_time": "2035-04-08T20:00:00.000Z"
-  # }, {
-  #   "venue_id": 3,
-  #   "venue_name": "Park Square Live Music & Coffee",
-  #   "artist_id": 6,
-  #   "artist_name": "The Wild Sax Band",
-  #   "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
-  #   "start_time": "2035-04-15T20:00:00.000Z"
-  # }]
   return render_template('pages/shows.html', shows=data)
 
 @app.route('/shows/create')
