@@ -16,16 +16,35 @@ def create_app(test_config=None):
   '''
   @TODO: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
   '''
+  CORS(app, resources={r"*" : {'origins': '*'}})
 
   '''
   @TODO: Use the after_request decorator to set Access-Control-Allow
   '''
+  @app.after_request
+  def after_request(response):
+    response.headers.add(
+      "Access-Control-Allow-Headers", "Content-Type, Authorization"
+    )
+    response.headers.add(
+      "Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS"
+    )
+    return response
 
   '''
   @TODO: 
   Create an endpoint to handle GET requests 
   for all available categories.
   '''
+
+  @app.route('/categories', methods=['GET'])
+  def get_categories():
+    categories = Category.query.all()
+    formatted_categories = [category.format() for category in categories]
+    return jsonify({
+      'success': True,
+      'Categories': formatted_categories
+    })
 
 
   '''
@@ -41,6 +60,20 @@ def create_app(test_config=None):
   Clicking on the page numbers should update the questions. 
   '''
 
+  @app.route('/questions', methods=['GET'])
+  def get_questions():
+    page = request.args.get('page', 1, type=int)
+    start = (page - 1) * 10
+    end = start + 10
+
+    questions = Question.query.all()
+    formatted_questions = [question.format() for question in questions]
+    return jsonify({
+      'success': True,
+      'questions': formatted_questions[start:end],
+      'total_questions': len(formatted_questions)
+    })
+
   '''
   @TODO: 
   Create an endpoint to DELETE question using a question ID. 
@@ -48,6 +81,15 @@ def create_app(test_config=None):
   TEST: When you click the trash icon next to a question, the question will be removed.
   This removal will persist in the database and when you refresh the page. 
   '''
+
+  @app.route('/questions/<int:question_id>')
+  def delete_question(question_id):
+    question = Question.query.filter(id == question_id).one_or_none()
+    question.delete()
+    return jsonify({
+      'success': True,
+    })
+
 
   '''
   @TODO: 
