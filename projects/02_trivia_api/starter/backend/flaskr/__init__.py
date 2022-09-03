@@ -81,7 +81,6 @@ def create_app(test_config=None):
   TEST: When you click the trash icon next to a question, the question will be removed.
   This removal will persist in the database and when you refresh the page. 
   '''
-
   @app.route('/questions/<int:question_id>')
   def delete_question(question_id):
     question = Question.query.filter(id == question_id).one_or_none()
@@ -101,6 +100,10 @@ def create_app(test_config=None):
   the form will clear and the question will appear at the end of the last page
   of the questions list in the "List" tab.  
   '''
+  @app.route('/questions/<int:question_id>', methods=['POST'])
+  def create_questions(question_id):
+    question = Question.query.get(question_id)
+    question.insert()
 
   '''
   @TODO: 
