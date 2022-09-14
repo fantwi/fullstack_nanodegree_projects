@@ -51,13 +51,13 @@ def create_app(test_config=None):
 
   @app.route('/categories')
   def get_categories():
-    categories = Category.query.order_by('Category.id').all()
+    categories = Category.query.order_by(Category.id).all()
 
     if len(categories) == 0:
       abort(404)
 
     formatted_categories = [category.format() for category in categories]
-    
+
     return jsonify({
       'success': True,
       'Categories': formatted_categories
@@ -79,12 +79,14 @@ def create_app(test_config=None):
 
   @app.route('/questions')
   def get_questions():
-    selection = Question.query.order_by('Question.id').all()
+    selection = Question.query.order_by(Question.id).all()
     current_questions = paginate_questions(request, selection)
-    categories = Category.query.order_by('Category.id').all()
+    categories = Category.query.order_by(Category.id).all()
+    formatted_categories = [category.format() for category in categories]
 
-    for question in current_questions:
-      current_category = question.category
+
+    # for question in current_questions:
+    #   current_category = question.category
       # current_category = Category.query.filter(Category.id)
 
     if len(current_questions) == 0:
@@ -94,8 +96,8 @@ def create_app(test_config=None):
       'success': True,
       'questions': current_questions,
       'total_questions': len(selection),
-      'current category': current_category,
-      'categories': categories,
+      # 'current category': current_category,
+      'categories': formatted_categories,
     })
 
   '''
@@ -107,23 +109,26 @@ def create_app(test_config=None):
   '''
   @app.route('/questions/<int:question_id>', methods=['DELETE'])
   def delete_question(question_id):
-    question = Question.query.filter(Question.id == question_id).one_or_none()
+    try:
+      question = Question.query.filter(Question.id == question_id).one_or_none()
 
-    if question is None:
-      abort(404)
+      if question is None:
+        abort(404)
 
-    question.delete()
+      question.delete()
 
-    selection = Question.query.order_by(Question.id).all()
-    current_questions = paginate_questions(request, selection)
-    total_questions = len(selection)
+      selection = Question.query.order_by(Question.id).all()
+      current_questions = paginate_questions(request, selection)
+      total_questions = len(selection)
 
-    return jsonify({
-      'success': True,
-      'deleted': question_id,
-      'questions': current_questions,
-      'total_questions': total_questions
-    })
+      return jsonify({
+        'success': True,
+        'deleted': question_id,
+        'questions': current_questions,
+        'total_questions': total_questions
+      })
+    except:
+      abort(422)
 
 
   '''
