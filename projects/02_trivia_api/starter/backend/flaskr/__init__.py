@@ -232,6 +232,13 @@ def create_app(test_config=None):
   and shown whether they were correct or not. 
   '''
 
+  @app.route('/quizzes', methods=['POST'])
+  def play_quizzes():
+    try:
+      pass
+    except:
+      abort(422)
+
   '''
   @TODO: 
   Create error handlers for all expected errors 
