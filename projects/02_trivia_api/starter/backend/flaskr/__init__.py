@@ -1,3 +1,4 @@
+from calendar import c
 import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
@@ -233,9 +234,24 @@ def create_app(test_config=None):
   '''
 
   @app.route('/quizzes', methods=['POST'])
-  def play_quizzes():
+  def play_quizzes(category = None, previous_question = None):
     try:
-      pass
+      if category is None:
+        available_quizzes = Question.query.filter(Question.id.notin_(previous_question)).all()
+      else:
+        available_quizzes = Question.query.filter(
+          Question.category == str(category)).filter(Question.id.notin_(previous_question)).all()
+
+      if len(available_quizzes) <= 0:
+        quiz_question = None
+      else:
+        quiz_question = available_quizzes[random.randrange(0, len(available_quizzes))]
+        formatted_question = quiz_question.format()
+
+      return jsonify({
+        'success': True,
+        'question': formatted_question,
+      })
     except:
       abort(422)
 
