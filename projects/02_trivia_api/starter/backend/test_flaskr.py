@@ -61,6 +61,20 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(len(data['questions']))
         self.assertTrue(len(data['categories']))
 
+# Not checked for corrections
+    """
+        In this method the request questions route is beyond 
+        what is available and returns a list of questions. 
+        this test should fail as it is beyond our scope.
+    """
+    def test_retrieve_questions_beyond_valid_page(self):#should fail
+        res = self.client().get('/questions?page=100')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code,400)
+        self.assertEqual(data['success'],False)
+        self.assertEqual(data['message'],'resource not found')
+
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
