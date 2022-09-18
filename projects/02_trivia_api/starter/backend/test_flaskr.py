@@ -111,6 +111,17 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(body['total_questions'])
         self.assertTrue(len(body['questions']))
 
+    """
+        Test 405 if question creation is not allowed
+    """
+    def test_405_if_question_creation_not_allowed(self):
+        res = self.client().post('/question/50', json=self.new_question)
+        body = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 405)
+        self.assertEqual(body['success'], False)
+        self.assertEqual(body['message'], 'Method not allowed')
+
     # """
     #     Test 422 Unprocessable when no question id is 
     #     provided when deleting a question
