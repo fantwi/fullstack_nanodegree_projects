@@ -42,8 +42,8 @@ class TriviaTestCase(unittest.TestCase):
         res = self.client().get('/categories')
         data = json.loads(res.data)
 
-        self.assertEqual(res.status_code,200)
-        self.assertEqual(data['success'],True)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
         self.assertTrue(len(data['categories']))
 
     """
@@ -51,15 +51,51 @@ class TriviaTestCase(unittest.TestCase):
         as desired and returns a list of questions. 
         this test should pass.
     """
-    def test_get_questions(self):#should pass
+    def test_get_paginated_questions(self):#should pass
         res = self.client().get('/questions')
         data = json.loads(res.data)
-        categories = Category.query.order_by(Category.id).all()
+        #categories = Category.query.order_by(Category.id).all()
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertTrue(data['total_questions'])
         self.assertTrue(len(data['questions']))
         self.assertTrue(len(data['categories']))
+
+    """empty message
+    """
+    def test_404_sent_requesting_beyond_valid_page(self):
+        res = self.client().get('/questions?page=1000')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'Resource not found')
+
+    """empty message
+    """
+    def test_delete_question(self):
+        res = self.client().delete('/questions/1')
+        data = json.loads(res.data)
+
+        question = Question.query.filter(Question.id == 1).one_or_none()
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['deleted'], 1)
+        self.assertTrue(len(data['questions']))
+        self.assertTrue(len(data['total_questions']))
+        self.assertEqual(question, None)
+
+    """Test 404 Not Found when deleting a question"""
+    def test_404_sent_deleting_questions(self):
+        res = self.client().delete('/questions/1000')
+        data = json.loads(res.data)
+
+        question = Question.query.filter(Question.id == 1000).one_or_none()
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'Resource not found')
 
 # Not checked for corrections
     # """
