@@ -62,35 +62,35 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(len(data['categories']))
 
 # Not checked for corrections
-    """
-        In this method the request questions route is beyond 
-        what is available and returns a list of questions. 
-        this test should fail as it is beyond our scope.
-    """
-    def test_retrieve_questions_beyond_valid_page(self):#should fail
-        res = self.client().get('/questions?page=100')
-        data = json.loads(res.data)
+    # """
+    #     In this method the request questions route is beyond 
+    #     what is available and returns a list of questions. 
+    #     this test should fail as it is beyond our scope.
+    # """
+    # def test_retrieve_questions_beyond_valid_page(self):#should fail
+    #     res = self.client().get('/questions?page=100')
+    #     data = json.loads(res.data)
 
-        self.assertEqual(res.status_code,400)
-        self.assertEqual(data['success'],False)
-        self.assertEqual(data['message'],'resource not found')
+    #     self.assertEqual(res.status_code,400)
+    #     self.assertEqual(data['success'],False)
+    #     self.assertEqual(data['message'],'resource not found')
 
-    """
-        In this method we check whether we can delete a question
-        given an id.  
-        this test should pass.
-    """
-    def test_delete_question(self): 
-        res = self.client().delete('/questions/5')
-        data = json.loads(res.data)
-        question = Question.query.filter(Question.id == 5).one_or_none()
+    # """
+    #     In this method we check whether we can delete a question
+    #     given an id.  
+    #     this test should pass.
+    # """
+    # def test_delete_question(self): 
+    #     res = self.client().delete('/questions/5')
+    #     data = json.loads(res.data)
+    #     question = Question.query.filter(Question.id == 5).one_or_none()
 
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(data['success'], True)
-        self.assertEqual(data['deleted'],5)
-        self.assertEqual(question, None)
-        self.assertTrue(len(data['questions']))
-        self.assertTrue(data['total_questions'])
+    #     self.assertEqual(res.status_code, 200)
+    #     self.assertEqual(data['success'], True)
+    #     self.assertEqual(data['deleted'],5)
+    #     self.assertEqual(question, None)
+    #     self.assertTrue(len(data['questions']))
+    #     self.assertTrue(data['total_questions'])
 
 
 # Make the tests conveniently executable

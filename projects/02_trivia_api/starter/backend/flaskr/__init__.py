@@ -61,7 +61,7 @@ def create_app(test_config=None):
 
     return jsonify({
       'success': True,
-      'Categories': formatted_categories
+      'categories': formatted_categories
     })
 
 
