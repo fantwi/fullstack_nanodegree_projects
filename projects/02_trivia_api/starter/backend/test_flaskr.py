@@ -24,6 +24,13 @@ class TriviaTestCase(unittest.TestCase):
             self.db.init_app(self.app)
             # create all tables
             self.db.create_all()
+
+        self.new_question = {
+            'question': 'Who was the US president in 2021',
+            'answer': 'Joe Biden',
+            'category': '4',
+            'difficulty': '4',
+        }
     
     def tearDown(self):
         """Executed after reach test"""
@@ -34,9 +41,7 @@ class TriviaTestCase(unittest.TestCase):
     Write at least one test for each test for successful operation and for expected errors.
     """
     """
-        In this method we check whether the catgeries route works 
-        as desired and returns a dictionary of id and type items
-        this test should pass.
+        Test getting all categories. This test should pass.
     """
     def test_get_categories(self):
         res = self.client().get('/categories')
@@ -47,11 +52,9 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(len(data['categories']))
 
     """
-        In this method we check whether the questions route works 
-        as desired and returns a list of questions. 
-        this test should pass.
+        Test getting paginated questions. This test should pass.
     """
-    def test_get_paginated_questions(self):#should pass
+    def test_get_paginated_questions(self):
         res = self.client().get('/questions')
         data = json.loads(res.data)
         #categories = Category.query.order_by(Category.id).all()
@@ -61,7 +64,8 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(len(data['questions']))
         self.assertTrue(len(data['categories']))
 
-    """empty message
+    """
+        Test requesting for an invalid page. This test should fail.
     """
     def test_404_sent_requesting_beyond_valid_page(self):
         res = self.client().get('/questions?page=1000')
@@ -71,7 +75,8 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Resource not found')
 
-    """empty message
+    """
+        Test deleting a question. This test should pass.
     """
     def test_delete_question(self):
         res = self.client().delete('/questions/5')
@@ -88,7 +93,7 @@ class TriviaTestCase(unittest.TestCase):
 
     """
         Test 422 Unprocessable sent if question does not exist 
-        when deleting a question
+        when deleting a question. This test should fail.
     """
     def test_422_sent_if_question_does_not_exist(self):
         res = self.client().delete('/questions/1000')
@@ -99,7 +104,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['message'], 'Unprocessable')
 
     """
-        Test creating a new question
+        Test the creation of a new question. This test should pass. 
     """
     def test_create_new_question(self):
         res = self.client().post('/questions', json=self.new_question)
@@ -112,7 +117,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(len(body['questions']))
 
     """
-        Test 405 if question creation is not allowed
+        Test 405 if question creation is not allowed. This test should fail.
     """
     def test_405_if_question_creation_not_allowed(self):
         res = self.client().post('/question/50', json=self.new_question)
@@ -135,37 +140,6 @@ class TriviaTestCase(unittest.TestCase):
     #     self.assertEqual(res.status_code, 422)
     #     self.assertEqual(data['success'], False)
     #     self.assertEqual(data['message'], 'Unprocessable')
-
-# Not checked for corrections
-    # """
-    #     In this method the request questions route is beyond 
-    #     what is available and returns a list of questions. 
-    #     this test should fail as it is beyond our scope.
-    # """
-    # def test_retrieve_questions_beyond_valid_page(self):#should fail
-    #     res = self.client().get('/questions?page=100')
-    #     data = json.loads(res.data)
-
-    #     self.assertEqual(res.status_code,400)
-    #     self.assertEqual(data['success'],False)
-    #     self.assertEqual(data['message'],'resource not found')
-
-    # """
-    #     In this method we check whether we can delete a question
-    #     given an id.  
-    #     this test should pass.
-    # """
-    # def test_delete_question(self): 
-    #     res = self.client().delete('/questions/5')
-    #     data = json.loads(res.data)
-    #     question = Question.query.filter(Question.id == 5).one_or_none()
-
-    #     self.assertEqual(res.status_code, 200)
-    #     self.assertEqual(data['success'], True)
-    #     self.assertEqual(data['deleted'],5)
-    #     self.assertEqual(question, None)
-    #     self.assertTrue(len(data['questions']))
-    #     self.assertTrue(data['total_questions'])
 
 
 # Make the tests conveniently executable

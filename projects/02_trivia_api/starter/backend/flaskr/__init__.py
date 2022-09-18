@@ -234,13 +234,16 @@ def create_app(test_config=None):
   '''
 
   @app.route('/quizzes', methods=['POST'])
-  def play_quizzes(category = None, previous_question = None):
+  def play_quizzes():
+    data = request.get_json()
+    previous_question = data.get('previous_question')
+    quiz_category = data.get('category')
     try:
-      if category is None:
+      if len(quiz_category) == 0:
         available_quizzes = Question.query.filter(Question.id.notin_(previous_question)).all()
       else:
         available_quizzes = Question.query.filter(
-          Question.category == str(category)).filter(Question.id.notin_(previous_question)).all()
+          Question.category == str(quiz_category)).filter(Question.id.notin_(previous_question)).all()
 
       if len(available_quizzes) <= 0:
         quiz_question = None
