@@ -97,6 +97,18 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Resource not found')
 
+    """Test 422 Unprocessable when no question id is 
+    provided when deleting a question"""
+    def test_422_sent_deleting_questions(self):
+        res = self.client().delete('/questions')
+        data = json.loads(res.data)
+
+        question = Question.query.filter(Question.id == None).one_or_none()
+
+        self.assertEqual(res.status_code, 422)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'Unprocessable')
+
 # Not checked for corrections
     # """
     #     In this method the request questions route is beyond 
